@@ -38,11 +38,11 @@ def get_picto_names():
     picto_table = tree.xpath( '//*[@id="wiki-content-block"]/div[5]/table')[0]
     return picto_table.xpath('.//tr/td[1]/p/a/text()')
 
-picto_names = get_picto_names()
+def main():
+    picto_names = get_picto_names()
+    pictos = list(map(getGetDataForPicto, picto_names))
 
-pictos = list(map(getGetDataForPicto, picto_names))
-
-df = pd.DataFrame(pictos, columns=["Name", "URL", "Lumina Cost", "Effect", "Passive 1", "Passive 2", "Location"])
-df.to_csv('./pictos.csv', index=False)
+    df = pd.DataFrame(pictos, columns=["Name", "URL", "Lumina Cost", "Effect", "Passive 1", "Passive 2", "Location"])
+    df.to_csv('./data/pictos.csv', index=False)
 
 

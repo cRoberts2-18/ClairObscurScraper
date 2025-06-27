@@ -11,15 +11,15 @@ def get_data_from_rows(row):
 
     return [name, location]
     
+def main():
+    resp = requests.get("https://expedition33.wiki.fextralife.com/Music+Records")
+    tree = etree.HTML(resp.text)
+    record_table = tree.xpath( '//*[@id="wiki-content-block"]/div[3]/table')[0]
+    record_rows = record_table.xpath('.//tbody/tr')
 
-resp = requests.get("https://expedition33.wiki.fextralife.com/Music+Records")
-tree = etree.HTML(resp.text)
-record_table = tree.xpath( '//*[@id="wiki-content-block"]/div[3]/table')[0]
-record_rows = record_table.xpath('.//tbody/tr')
+    records = list(map(get_data_from_rows, record_rows))
 
-records = list(map(get_data_from_rows, record_rows))
-
-df = pd.DataFrame(records, columns=["Name","Location"])
-df.to_csv('./records.csv', index=False)
+    df = pd.DataFrame(records, columns=["Name","Location"])
+    df.to_csv('./data/records.csv', index=False)
 
 

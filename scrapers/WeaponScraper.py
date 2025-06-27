@@ -46,12 +46,11 @@ def get_data_for_weapon(name):
 
     return [name, url, character, element, stat_1, stat_1_scale, stat_2, stat_2_scale, level_4, level_10, level_20, location]
 
+def main():
+    weapon_names = get_weapon_names()
+    weapons = list(map(get_data_for_weapon, weapon_names))
 
-weapon_names = get_weapon_names()
-
-weapons = list(map(get_data_for_weapon, weapon_names))
-
-df = pd.DataFrame(weapons, columns=["Name", "URL", "Character", "Element", "Stat 1", "Stat 1 Scale", "Stat 2", "Stat 2 Scale", "Level 4", "Level 10", "Level 20", "Location"])
-df.to_csv('./weapons.csv', index=False)
+    df = pd.DataFrame(weapons, columns=["Name", "URL", "Character", "Element", "Stat 1", "Stat 1 Scale", "Stat 2", "Stat 2 Scale", "Level 4", "Level 10", "Level 20", "Location"])
+    df.to_csv('./data/weapons.csv', index=False)
 
 
