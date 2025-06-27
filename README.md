@@ -1,1 +1,1 @@
-Scrapes all clair obscur Picto web pages from a csv of Picto names producing a CSV of all Pictos with their URLs and the location list items
+Scrapers to generate CSV files for all Pictos with their effects, passive and locations as well as all records with their locations

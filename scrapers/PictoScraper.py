@@ -1,8 +1,6 @@
 from lxml import etree
 import requests
 import pandas as pd
-import itertools
-
 
 def getGetDataForPicto(name):
     text = name.replace(' ', '+')
@@ -14,7 +12,7 @@ def getGetDataForPicto(name):
     effect = ''.join(effect_val)
 
     location_val = tree.xpath('/html/body/div[2]/div[2]/div[2]/div[2]/div[2]/div[2]/div/div/div/div[2]/div/div[4]/div[1]/ul[1]//text()')
-    location = ''.join(location_val)
+    location = ''.join(location_val).replace('[See Expedition 33 Map]', '')
 
     passive_val = tree.xpath('/html/body/div[2]/div[2]/div[2]/div[2]/div[2]/div[2]/div/div/div/div[2]/div/div[4]/div[1]/div[1]/div/table/tbody/tr[3]/td/ul[1]/li//text()')
     passive = ''.join(passive_val)
@@ -34,14 +32,17 @@ def getGetDataForPicto(name):
         return [name, url, effect, cost, passive_list[0], '', location]
 
 
+def get_picto_names():
+    resp = requests.get("https://expedition33.wiki.fextralife.com/Pictos")
+    tree = etree.HTML(resp.text)
+    picto_table = tree.xpath( '//*[@id="wiki-content-block"]/div[5]/table')[0]
+    return picto_table.xpath('.//tr/td[1]/p/a/text()')
 
-res = pd.read_csv('baseData.csv', sep=',', header=None)
+picto_names = get_picto_names()
 
-data = list(itertools.chain.from_iterable(res.values))
-data = list(map(getGetDataForPicto, data))
-print(data)
+pictos = list(map(getGetDataForPicto, picto_names))
 
-df = pd.DataFrame(data, columns=["Name", "URL", "Lumina Cost", "Effect", "Passive 1", "Passive 2", "Location"])
-df.to_csv('picto_locations.csv', index=False)
+df = pd.DataFrame(pictos, columns=["Name", "URL", "Lumina Cost", "Effect", "Passive 1", "Passive 2", "Location"])
+df.to_csv('./pictos.csv', index=False)
 
 
